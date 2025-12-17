@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - Invictus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .profile-container {
+            min-height: 100vh;
+            padding: 120px 0 80px;
+            background: var(--bg-white);
+        }
+        .profile-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .profile-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+        .profile-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .tab-button {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .tab-button:hover {
+            color: var(--text-dark);
+        }
+        .tab-content {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-section {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+        .form-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--bg-white);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .btn-secondary {
+            padding: 0.875rem 2rem;
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        .btn-danger {
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-danger:hover {
+            background: #ef4444;
+            color: white;
+        }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .portfolio-card {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+        .portfolio-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+        .portfolio-card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        .portfolio-card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .portfolio-card-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .portfolio-card-tech {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        .portfolio-card-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .portfolio-card-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .portfolio-card-links a:hover {
+            text-decoration: underline;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .message.show {
+            display: block;
+        }
+        .message.success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        .logout-btn {
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            padding: 0.5rem 1rem;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
+        }
+        @media (max-width: 768px) {
+            .logout-btn {
+                position: static;
+                display: block;
+                text-align: center;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo"><a href="index.html" style="text-decoration: none; color: inherit;">Invictus</a></div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="index.html#services" class="nav-link">Услуги</a></li>
+                    <li><a href="index.html#about" class="nav-link">О нас</a></li>
+                </ul>
+                <button class="menu-toggle" aria-label="Переключить меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="container">
+            <div class="profile-header">
+                <h1 class="profile-title">Настройки профиля</h1>
+                <a href="#" class="logout-btn" onclick="logout(); return false;">Выйти</a>
+            </div>
+
+            <div class="message" id="message"></div>
+
+            <div class="profile-tabs">
+                <button class="tab-button active" data-tab="dashboard">Личный кабинет</button>
+                <button class="tab-button" data-tab="profile">Профиль</button>
+                <button class="tab-button" data-tab="portfolio">Портфолио</button>
+            </div>
+
+            <div class="tab-content active" id="dashboardTab">
+                <div class="form-section">
+                    <h3>Добро пожаловать, <span id="userGreeting">Пользователь</span>!</h3>
+                    <div class="user-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+                        <div class="stat-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid var(--border-color);">
+                            <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">📁</div>
+                            <div class="stat-value" id="portfolioCount" style="font-size: 2rem; font-weight: 700; color: var(--primary-color);">0</div>
+                            <div class="stat-label" style="color: var(--text-light); margin-top: 0.5rem;">Проектов в портфолио</div>
+                        </div>
+                        <div class="stat-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid var(--border-color);">
+                            <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">👤</div>
+                            <div class="stat-value" id="userSince" style="font-size: 1.25rem; font-weight: 600; color: var(--text-dark);">-</div>
+                            <div class="stat-label" style="color: var(--text-light); margin-top: 0.5rem;">Пользователь с</div>
+                        </div>
+                        <div class="stat-card" style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; text-align: center; border: 1px solid var(--border-color);">
+                            <div class="stat-icon" style="font-size: 2.5rem; margin-bottom: 0.5rem;">✅</div>
+                            <div class="stat-value" id="visibleProjects" style="font-size: 2rem; font-weight: 700; color: #22c55e;">0</div>
+                            <div class="stat-label" style="color: var(--text-light); margin-top: 0.5rem;">Видимых проектов</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section" style="margin-top: 2rem;">
+                    <h3>Информация об аккаунте</h3>
+                    <div class="user-info" style="display: grid; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; padding: 1rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color);">
+                            <span style="color: var(--text-light);">Email:</span>
+                            <span id="dashboardEmail" style="color: var(--text-dark); font-weight: 500;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 1rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color);">
+                            <span style="color: var(--text-light);">Имя пользователя:</span>
+                            <span id="dashboardUsername" style="color: var(--text-dark); font-weight: 500;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 1rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color);">
+                            <span style="color: var(--text-light);">Полное имя:</span>
+                            <span id="dashboardFullName" style="color: var(--text-dark); font-weight: 500;">-</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; padding: 1rem; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border-color);">
+                            <span style="color: var(--text-light);">Статус аккаунта:</span>
+                            <span id="dashboardStatus" style="color: #22c55e; font-weight: 500;">Активен</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="profileTab">
+                <div class="form-section">
+                    <h3>Личная информация</h3>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileEmail">Email</label>
+                            <input type="email" id="profileEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileUsername">Имя пользователя</label>
+                            <input type="text" id="profileUsername" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="profileFullName">Полное имя</label>
+                            <input type="text" id="profileFullName" name="full_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="profileTelegram">Telegram</label>
+                            <input type="text" id="profileTelegram" name="telegram" placeholder="@username">
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePhone">Телефон</label>
+                            <input type="tel" id="profilePhone" name="phone" placeholder="+7 (999) 123-45-67">
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="profileIsPublic" name="is_profile_public" style="width: auto;">
+                                <span>Опубликовать анкету в каталоге специалистов</span>
+                            </label>
+                            <p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">
+                                Если включено, ваша анкета будет видна другим пользователям в каталоге специалистов
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="profileShowEmail" name="show_email_in_profile" style="width: auto;" checked>
+                                <span>Показывать email в публичной анкете</span>
+                            </label>
+                            <p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">
+                                Если выключено, ваш email не будет отображаться в публичной анкете
+                            </p>
+                        </div>
+                        <button type="submit" class="btn-primary">Сохранить изменения</button>
+                    </form>
+                </div>
+
+                <div class="form-section">
+                    <h3>Изменить пароль</h3>
+                    <form id="passwordForm">
+                        <div class="form-group">
+                            <label for="newPassword">Новый пароль</label>
+                            <input type="password" id="newPassword" name="password" minlength="6">
+                        </div>
+                        <button type="submit" class="btn-primary">Изменить пароль</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="tab-content" id="portfolioTab">
+                <div class="form-section">
+                    <h3>Добавить проект в портфолио</h3>
+                    <form id="portfolioForm">
+                        <div class="form-group">
+                            <label for="portfolioTitle">Название проекта</label>
+                            <input type="text" id="portfolioTitle" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="portfolioDescription">Описание</label>
+                            <textarea id="portfolioDescription" name="description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="portfolioImageFile">Изображение проекта</label>
+                            <input type="file" id="portfolioImageFile" name="image_file" accept="image/jpeg,image/png,image/gif,image/webp">
+                            <p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">
+                                Поддерживаемые форматы: JPG, PNG, GIF, WEBP (максимум 10 МБ)
+                            </p>
+                            <div id="portfolioImagePreview" style="margin-top: 1rem; display: none;">
+                                <img id="portfolioImagePreviewImg" src="" alt="Предпросмотр" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="portfolioProjectUrl">URL проекта</label>
+                            <input type="url" id="portfolioProjectUrl" name="project_url" placeholder="https://example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="portfolioTechnologies">Технологии (через запятую)</label>
+                            <input type="text" id="portfolioTechnologies" name="technologies" placeholder="React, Node.js, PostgreSQL">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="portfolioVisible" name="is_visible" checked>
+                                Отображать в портфолио
+                            </label>
+                        </div>
+                        <button type="submit" class="btn-primary">Добавить проект</button>
+                    </form>
+                </div>
+
+                <div class="form-section">
+                    <h3>Мои проекты</h3>
+                    <div id="portfolioList" class="portfolio-grid">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📁</div>
+                            <p>Портфолио пусто. Добавьте свой первый проект!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="editModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: var(--bg-card); padding: 2rem; border-radius: 16px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto;">
+            <h3 style="margin-bottom: 1.5rem; color: var(--text-dark);">Редактировать проект</h3>
+            <form id="editPortfolioForm">
+                <input type="hidden" id="editPortfolioId">
+                <div class="form-group">
+                    <label for="editPortfolioTitle">Название проекта</label>
+                    <input type="text" id="editPortfolioTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="editPortfolioDescription">Описание</label>
+                    <textarea id="editPortfolioDescription" name="description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editPortfolioImageFile">Изображение проекта</label>
+                    <input type="file" id="editPortfolioImageFile" name="image_file" accept="image/jpeg,image/png,image/gif,image/webp">
+                    <p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">
+                        Оставьте пустым, чтобы сохранить текущее изображение. Поддерживаемые форматы: JPG, PNG, GIF, WEBP (максимум 10 МБ)
+                    </p>
+                    <div id="editPortfolioImagePreview" style="margin-top: 1rem; display: none;">
+                        <img id="editPortfolioImagePreviewImg" src="" alt="Предпросмотр" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    </div>
+                    <div id="editPortfolioCurrentImage" style="margin-top: 1rem; display: none;">
+                        <p style="color: var(--text-light); font-size: 0.875rem; margin-bottom: 0.5rem;">Текущее изображение:</p>
+                        <img id="editPortfolioCurrentImageImg" src="" alt="Текущее изображение" style="max-width: 300px; max-height: 200px; border-radius: 8px; border: 1px solid var(--border-color);">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editPortfolioProjectUrl">URL проекта</label>
+                    <input type="url" id="editPortfolioProjectUrl" name="project_url">
+                </div>
+                <div class="form-group">
+                    <label for="editPortfolioTechnologies">Технологии</label>
+                    <input type="text" id="editPortfolioTechnologies" name="technologies">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="editPortfolioVisible" name="is_visible">
+                        Отображать в портфолио
+                    </label>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn-primary">Сохранить</button>
+                    <button type="button" class="btn-secondary" onclick="closeEditModal()">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script src="profile.js"></script>
+</body>
+</html>
+
