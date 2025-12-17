@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Проект портфолио - Invictus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .portfolio-item-view-container {
+            min-height: 100vh;
+            padding: 120px 0 80px;
+            background: var(--bg-white);
+        }
+        .portfolio-item-view-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 2rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-card);
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .back-button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        .project-header {
+            background: var(--bg-card);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+        .project-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+        .project-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+        }
+        .meta-item strong {
+            color: var(--text-dark);
+        }
+        .project-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+        .project-description {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            white-space: pre-wrap;
+        }
+        .tech-section {
+            margin-bottom: 2rem;
+        }
+        .tech-section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+        }
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .tech-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+        .project-link {
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .project-link:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .owner-info {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+        .owner-info-title {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+        }
+        .owner-info-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        .owner-info-link:hover {
+            text-decoration: underline;
+        }
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        .error-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+        .error-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo"><a href="index.html" style="text-decoration: none; color: inherit;">Invictus</a></div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="index.html#services" class="nav-link">Услуги</a></li>
+                    <li><a href="anketi.html" class="nav-link">Найти работника</a></li>
+                    <li><a href="index.html#about" class="nav-link">О нас</a></li>
+                    <li id="authNavItem"></li>
+                </ul>
+                <button class="menu-toggle" aria-label="Переключить меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="portfolio-item-view-container">
+        <div class="container">
+            <div class="portfolio-item-view-content">
+                <a href="javascript:history.back()" class="back-button">← Назад</a>
+
+                <div id="loadingState" class="loading">
+                    <p>Загрузка проекта...</p>
+                </div>
+
+                <div id="errorState" class="error-state" style="display: none;">
+                    <div class="error-state-icon">❌</div>
+                    <h3>Проект не найден</h3>
+                    <p>Запрошенный проект не существует или не доступен для просмотра.</p>
+                    <a href="anketi.html" class="back-button" style="margin-top: 1rem;">Вернуться к каталогу</a>
+                </div>
+
+                <div id="projectContent" style="display: none;">
+                    <div class="project-header">
+                        <h1 class="project-title" id="projectTitle">Загрузка...</h1>
+                        <div class="project-meta" id="projectMeta">
+                            <!-- мета-информация будет добавлена через js -->
+                        </div>
+                        <img id="projectImage" class="project-image" style="display: none;" alt="Изображение проекта">
+                        <div class="project-description" id="projectDescription"></div>
+                        
+                        <div class="tech-section" id="techSection" style="display: none;">
+                            <h2 class="tech-section-title">Используемые технологии</h2>
+                            <div class="tech-tags" id="techTags">
+                                <!-- ехнологии будут добавлены через js -->
+                            </div>
+                        </div>
+
+                        <div class="project-links" id="projectLinks" style="display: none;">
+                            <!-- сылылки будут добавлены через js -->
+                        </div>
+
+                        <div class="owner-info">
+                            <div class="owner-info-title">Автор проекта:</div>
+                            <a href="#" id="ownerLink" class="owner-info-link">Загрузка...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script>
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // дата формат
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // загрузка проекта
+        async function loadProject() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const projectId = urlParams.get('id');
+
+            if (!projectId) {
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('errorState').style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/v1/portfolio/public/${projectId}`);
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        document.getElementById('loadingState').style.display = 'none';
+                        document.getElementById('errorState').style.display = 'block';
+                        return;
+                    }
+                    throw new Error('Ошибка при загрузке проекта');
+                }
+
+                const project = await response.json();
+
+                // ьтображение основной информации
+                document.getElementById('projectTitle').textContent = project.title;
+                
+                // Мета-информация
+                const metaHtml = `
+                    <div class="meta-item">
+                        <strong>Дата создания:</strong>
+                        <span>${formatDate(project.created_at)}</span>
+                    </div>
+                    ${project.updated_at && project.updated_at !== project.created_at ? `
+                        <div class="meta-item">
+                            <strong>Обновлено:</strong>
+                            <span>${formatDate(project.updated_at)}</span>
+                        </div>
+                    ` : ''}
+                `;
+                document.getElementById('projectMeta').innerHTML = metaHtml;
+
+                // Изображение
+                if (project.image_url) {
+                    const img = document.getElementById('projectImage');
+                    img.src = project.image_url.startsWith('http') ? project.image_url : `http://localhost:8000${project.image_url}`;
+                    img.style.display = 'block';
+                    img.onerror = function() {
+                        this.style.display = 'none';
+                    };
+                }
+
+                // Описание
+                if (project.description) {
+                    document.getElementById('projectDescription').textContent = project.description;
+                } else {
+                    document.getElementById('projectDescription').textContent = 'Описание отсутствует';
+                }
+
+                // Технологии
+                if (project.technologies) {
+                    const techTags = project.technologies.split(',').map(tech => tech.trim()).filter(tech => tech);
+                    if (techTags.length > 0) {
+                        document.getElementById('techSection').style.display = 'block';
+                        document.getElementById('techTags').innerHTML = techTags.map(tech => 
+                            `<span class="tech-tag">${escapeHtml(tech)}</span>`
+                        ).join('');
+                    }
+                }
+
+                // Ссылки
+                if (project.project_url) {
+                    document.getElementById('projectLinks').style.display = 'flex';
+                    document.getElementById('projectLinks').innerHTML = `
+                        <a href="${escapeHtml(project.project_url)}" target="_blank" class="project-link">
+                            Посмотреть проект →
+                        </a>
+                    `;
+                }
+
+                // Информация о владельце
+                const ownerName = project.owner_full_name || project.owner_username || 'Неизвестно';
+                const ownerLink = document.getElementById('ownerLink');
+                ownerLink.textContent = ownerName;
+                ownerLink.href = `profile-view.html?id=${project.user_id}`;
+
+                // Показывать контент
+                document.getElementById('loadingState').style.display = 'none';
+                document.getElementById('projectContent').style.display = 'block';
+
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('loadingState').innerHTML = 
+                    '<p style="color: #ef4444;">Ошибка при загрузке проекта. Убедитесь, что backend запущен.</p>';
+            }
+        }
+
+        // Загрузка при открытии страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProject();
+        });
+    </script>
+</body>
+</html>
+
