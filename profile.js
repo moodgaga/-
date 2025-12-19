@@ -30,13 +30,9 @@ async function loadUserData() {
         document.getElementById('profileTelegram').value = currentUser.telegram || '';
         document.getElementById('profilePhone').value = currentUser.phone || '';
         document.getElementById('profileIsPublic').checked = currentUser.is_profile_public || false;
-        const showEmail = currentUser.show_email_in_profile;
-        if (showEmail === false) {
-            document.getElementById('profileShowEmail').checked = false;
-        } else {
-            document.getElementById('profileShowEmail').checked = true;
-        }
+        document.getElementById('profileShowEmail').checked = currentUser.show_email_in_profile !== false;
         
+
         updateDashboard();
     } catch (error) {
         showMessage('Ошибка при загрузке данных пользователя: ' + error.message, 'error');
@@ -44,18 +40,22 @@ async function loadUserData() {
     }
 }
 
+
 function updateDashboard() {
     if (!currentUser) return;
     
+
     const greeting = currentUser.full_name || currentUser.username || 'Пользователь';
     document.getElementById('userGreeting').textContent = greeting;
     
+
     document.getElementById('dashboardEmail').textContent = currentUser.email || '-';
     document.getElementById('dashboardUsername').textContent = currentUser.username || '-';
     document.getElementById('dashboardFullName').textContent = currentUser.full_name || 'Не указано';
     document.getElementById('dashboardStatus').textContent = currentUser.is_active ? 'Активен' : 'Неактивен';
     document.getElementById('dashboardStatus').style.color = currentUser.is_active ? '#22c55e' : '#ef4444';
     
+
     if (currentUser.created_at) {
         const date = new Date(currentUser.created_at);
         const formattedDate = date.toLocaleDateString('ru-RU', { 
@@ -66,8 +66,10 @@ function updateDashboard() {
         document.getElementById('userSince').textContent = formattedDate;
     }
     
+
     updatePortfolioStats();
 }
+
 
 function updatePortfolioStats() {
     const totalCount = portfolioItems.length;
@@ -77,6 +79,7 @@ function updatePortfolioStats() {
     document.getElementById('visibleProjects').textContent = visibleCount;
 }
 
+
 function setupTabs() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -85,14 +88,17 @@ function setupTabs() {
         button.addEventListener('click', () => {
             const tabName = button.dataset.tab;
             
+
             tabButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             
+
             tabContents.forEach(content => content.classList.remove('active'));
             document.getElementById(`${tabName}Tab`).classList.add('active');
         });
     });
 }
+
 
 function setupProfileForm() {
     const form = document.getElementById('profileForm');
@@ -102,9 +108,9 @@ function setupProfileForm() {
         const updateData = {
             email: document.getElementById('profileEmail').value,
             username: document.getElementById('profileUsername').value,
-            full_name: document.getElementById('profileFullName').value || null,
-            telegram: document.getElementById('profileTelegram').value || null,
-            phone: document.getElementById('profilePhone').value || null,
+            full_name: document.getElementById('profileFullName').value.trim() || null,
+            telegram: document.getElementById('profileTelegram').value.trim() || null,
+            phone: document.getElementById('profilePhone').value.trim() || null,
             is_profile_public: document.getElementById('profileIsPublic').checked,
             show_email_in_profile: document.getElementById('profileShowEmail').checked
         };
@@ -119,6 +125,7 @@ function setupProfileForm() {
         }
     });
 }
+
 
 function setupPasswordForm() {
     const form = document.getElementById('passwordForm');
@@ -142,21 +149,25 @@ function setupPasswordForm() {
     });
 }
 
+
 function setupPortfolioForm() {
     const form = document.getElementById('portfolioForm');
     const imageFileInput = document.getElementById('portfolioImageFile');
     const imagePreview = document.getElementById('portfolioImagePreview');
     const imagePreviewImg = document.getElementById('portfolioImagePreviewImg');
     
+
     imageFileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
+
             if (file.size > 10 * 1024 * 1024) {
                 showMessage('Файл слишком большой. Максимальный размер: 10 МБ', 'error');
                 e.target.value = '';
                 return;
             }
             
+
             const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!allowedTypes.includes(file.type)) {
                 showMessage('Недопустимый формат файла. Используйте JPG, PNG, GIF или WEBP', 'error');
@@ -178,15 +189,20 @@ function setupPortfolioForm() {
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const title = document.getElementById('portfolioTitle').value;
-        const description = document.getElementById('portfolioDescription').value || null;
-        const projectUrl = document.getElementById('portfolioProjectUrl').value || null;
-        const technologies = document.getElementById('portfolioTechnologies').value || null;
+        const title = document.getElementById('portfolioTitle').value.trim();
+        if (!title) {
+            showMessage('Название проекта обязательно для заполнения', 'error');
+            return;
+        }
+        const description = document.getElementById('portfolioDescription').value.trim() || null;
+        const projectUrl = document.getElementById('portfolioProjectUrl').value.trim() || null;
+        const technologies = document.getElementById('portfolioTechnologies').value.trim() || null;
         const isVisible = document.getElementById('portfolioVisible').checked;
         const imageFile = imageFileInput.files[0];
         
         let imageUrl = null;
         
+
         if (imageFile) {
             try {
                 const formData = new FormData();
@@ -238,6 +254,7 @@ function setupPortfolioForm() {
     });
 }
 
+
 async function loadPortfolio() {
     try {
         portfolioItems = await getPortfolio();
@@ -248,6 +265,7 @@ async function loadPortfolio() {
         console.error('Ошибка загрузки портфолио:', error);
     }
 }
+
 
 function renderPortfolio() {
     const container = document.getElementById('portfolioList');
@@ -284,6 +302,7 @@ function renderPortfolio() {
     `).join('');
 }
 
+
 function openEditModal(itemId) {
     const item = portfolioItems.find(i => i.id === itemId);
     if (!item) return;
@@ -295,9 +314,11 @@ function openEditModal(itemId) {
     document.getElementById('editPortfolioTechnologies').value = item.technologies || '';
     document.getElementById('editPortfolioVisible').checked = item.is_visible;
     
+
     document.getElementById('editPortfolioImageFile').value = '';
     document.getElementById('editPortfolioImagePreview').style.display = 'none';
     
+
     const currentImageDiv = document.getElementById('editPortfolioCurrentImage');
     const currentImageImg = document.getElementById('editPortfolioCurrentImageImg');
     if (item.image_url) {
@@ -309,6 +330,7 @@ function openEditModal(itemId) {
     
     document.getElementById('editModal').style.display = 'flex';
     
+
     const imageFileInput = document.getElementById('editPortfolioImageFile');
     const imagePreview = document.getElementById('editPortfolioImagePreview');
     const imagePreviewImg = document.getElementById('editPortfolioImagePreviewImg');
@@ -316,12 +338,14 @@ function openEditModal(itemId) {
     imageFileInput.onchange = (e) => {
         const file = e.target.files[0];
         if (file) {
+
             if (file.size > 10 * 1024 * 1024) {
                 showMessage('Файл слишком большой. Максимальный размер: 10 МБ', 'error');
                 e.target.value = '';
                 return;
             }
             
+
             const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
             if (!allowedTypes.includes(file.type)) {
                 showMessage('Недопустимый формат файла. Используйте JPG, PNG, GIF или WEBP', 'error');
@@ -329,6 +353,7 @@ function openEditModal(itemId) {
                 return;
             }
             
+
             const reader = new FileReader();
             reader.onload = (event) => {
                 imagePreviewImg.src = event.target.result;
@@ -344,19 +369,25 @@ function openEditModal(itemId) {
         }
     };
     
+
     const form = document.getElementById('editPortfolioForm');
     form.onsubmit = async (e) => {
         e.preventDefault();
         
-        const title = document.getElementById('editPortfolioTitle').value;
-        const description = document.getElementById('editPortfolioDescription').value || null;
-        const projectUrl = document.getElementById('editPortfolioProjectUrl').value || null;
-        const technologies = document.getElementById('editPortfolioTechnologies').value || null;
+        const title = document.getElementById('editPortfolioTitle').value.trim();
+        if (!title) {
+            showMessage('Название проекта обязательно для заполнения', 'error');
+            return;
+        }
+        const description = document.getElementById('editPortfolioDescription').value.trim() || null;
+        const projectUrl = document.getElementById('editPortfolioProjectUrl').value.trim() || null;
+        const technologies = document.getElementById('editPortfolioTechnologies').value.trim() || null;
         const isVisible = document.getElementById('editPortfolioVisible').checked;
         const imageFile = imageFileInput.files[0];
         
         let imageUrl = item.image_url;
         
+
         if (imageFile) {
             try {
                 const formData = new FormData();
@@ -407,10 +438,12 @@ function openEditModal(itemId) {
     };
 }
 
+
 function closeEditModal() {
     document.getElementById('editModal').style.display = 'none';
     document.getElementById('editPortfolioForm').reset();
 }
+
 
 async function deletePortfolioItemHandler(itemId) {
     if (!confirm('Вы уверены, что хотите удалить этот проект?')) {
@@ -428,6 +461,7 @@ async function deletePortfolioItemHandler(itemId) {
     }
 }
 
+
 function showMessage(text, type) {
     const messageEl = document.getElementById('message');
     messageEl.textContent = text;
@@ -438,8 +472,10 @@ function showMessage(text, type) {
     }, 5000);
 }
 
+
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
+
