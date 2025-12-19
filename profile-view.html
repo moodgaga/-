@@ -272,7 +272,7 @@
                 <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
                 <h3>Анкета не найдена</h3>
                 <p>Запрошенная анкета не существует или не опубликована.</p>
-                <a href="directory.html" class="back-button" style="margin-top: 1rem;">Вернуться к каталогу</a>
+                <a href="anketi.html" class="back-button" style="margin-top: 1rem;">Вернуться к каталогу</a>
             </div>
         </div>
     </div>
@@ -356,7 +356,7 @@
         function renderPortfolio(portfolioItems) {
             const portfolioGrid = document.getElementById('portfolioGrid');
 
-            if (portfolioItems.length === 0) {
+            if (!portfolioItems || portfolioItems.length === 0) {
                 portfolioGrid.innerHTML = '<p style="color: var(--text-light); text-align: center; padding: 2rem;">Портфолио пока пусто</p>';
                 return;
             }
@@ -418,7 +418,7 @@
 
                 renderContacts(profile);
 
-                renderPortfolio(profile.portfolio_items);
+                renderPortfolio(profile.portfolio_items || []);
 
                 document.getElementById('loadingState').style.display = 'none';
                 document.getElementById('profileContent').style.display = 'block';
