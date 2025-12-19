@@ -1,1 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог специалистов - Invictus</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .directory-container {
+            min-height: 100vh;
+            padding: 120px 0 80px;
+            background: var(--bg-white);
+        }
+        .directory-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .directory-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+        .directory-subtitle {
+            font-size: 1.125rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        .profiles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .profile-card {
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+        .profile-info h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        .profile-info p {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+        .profile-portfolio {
+            margin-top: 1.5rem;
+        }
+        .portfolio-item {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+        .portfolio-item-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        .portfolio-item-description {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        .portfolio-item-tech {
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        .portfolio-item-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+        .portfolio-item-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .portfolio-item-links a:hover {
+            text-decoration: underline;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-light);
+        }
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+        .profile-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            margin-top: 0.25rem;
+        }
+        .btn-primary {
+            padding: 0.875rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo"><a href="index.html" style="text-decoration: none; color: inherit;">Invictus</a></div>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Главная</a></li>
+                    <li><a href="index.html#services" class="nav-link">Услуги</a></li>
+                    <li><a href="index.html#find-employee" class="nav-link">Найти работника</a></li>
+                    <li><a href="index.html#about" class="nav-link">О нас</a></li>
+                    <li id="authNavItem"></li>
+                </ul>
+                <button class="menu-toggle" aria-label="Переключить меню">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="directory-container">
+        <div class="container">
+            <div class="directory-header">
+                <h1 class="directory-title">Каталог специалистов</h1>
+                <p class="directory-subtitle">Просмотрите анкеты талантливых специалистов с портфолио</p>
+            </div>
+
+            <div id="loadingState" class="loading">
+                <p>Загрузка анкет...</p>
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <div class="empty-state-icon">👥</div>
+                <h3>Пока нет публичных анкет</h3>
+                <p>Специалисты еще не выставили свои анкеты для публичного просмотра.</p>
+            </div>
+
+            <div id="profilesGrid" class="profiles-grid" style="display: none;">
+                <!-- Профили будут добавлены через JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Функция для получения первой буквы имени
+        function getInitials(name) {
+            if (!name) return '?';
+            return name.charAt(0).toUpperCase();
+        }
+
+        // Функция для форматирования даты
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ru-RU', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        // Функция для отображения профилей
+        function renderProfiles(profiles) {
+            const grid = document.getElementById('profilesGrid');
+            const loading = document.getElementById('loadingState');
+            const empty = document.getElementById('emptyState');
+
+            if (profiles.length === 0) {
+                loading.style.display = 'none';
+                empty.style.display = 'block';
+                grid.style.display = 'none';
+                return;
+            }
+
+            loading.style.display = 'none';
+            empty.style.display = 'none';
+            grid.style.display = 'grid';
+
+            grid.innerHTML = profiles.map(profile => {
+                const initials = getInitials(profile.full_name || profile.username);
+                const portfolioCount = profile.portfolio_items.length;
+                const visibleProjects = profile.portfolio_items.filter(p => p.is_visible).length;
+
+                let portfolioHtml = '';
+                if (profile.portfolio_items.length > 0) {
+                    portfolioHtml = profile.portfolio_items.slice(0, 3).map(item => `
+                        <div class="portfolio-item">
+                            <div class="portfolio-item-title">${escapeHtml(item.title)}</div>
+                            ${item.description ? `<div class="portfolio-item-description">${escapeHtml(item.description.substring(0, 100))}${item.description.length > 100 ? '...' : ''}</div>` : ''}
+                            ${item.technologies ? `<div class="portfolio-item-tech">${escapeHtml(item.technologies)}</div>` : ''}
+                            <div class="portfolio-item-links">
+                                <a href="portfolio-item-view.html?id=${item.id}">Подробнее</a>
+                                ${item.project_url ? `<a href="${escapeHtml(item.project_url)}" target="_blank">Посмотреть проект</a>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                    if (profile.portfolio_items.length > 3) {
+                        portfolioHtml += `<p style="color: var(--text-light); font-size: 0.875rem; margin-top: 0.5rem;">И еще ${profile.portfolio_items.length - 3} проект(ов)...</p>`;
+                    }
+                } else {
+                    portfolioHtml = '<p style="color: var(--text-light);">Портфолио пока пусто</p>';
+                }
+
+                return `
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">${initials}</div>
+                            <div class="profile-info">
+                                <h3>${escapeHtml(profile.full_name || profile.username)}</h3>
+                                <p>@${escapeHtml(profile.username)}</p>
+                            </div>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${portfolioCount}</div>
+                                <div class="stat-label">Проектов</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${visibleProjects}</div>
+                                <div class="stat-label">Видимых</div>
+                            </div>
+                        </div>
+                        <div class="profile-portfolio">
+                            <h4 style="color: var(--text-dark); margin-bottom: 1rem; font-size: 1rem;">Портфолио:</h4>
+                            ${portfolioHtml}
+                        </div>
+                        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                            <a href="profile-view.html?id=${profile.id}" class="btn-primary" style="display: block; text-align: center; text-decoration: none; padding: 0.75rem;">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Функция для экранирования HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Загрузка профилей
+        async function loadProfiles() {
+            try {
+                const response = await fetch('http://localhost:8000/api/v1/users/public');
+                if (!response.ok) {
+                    throw new Error('Ошибка при загрузке профилей');
+                }
+                const profiles = await response.json();
+                renderProfiles(profiles);
+            } catch (error) {
+                console.error('Ошибка:', error);
+                document.getElementById('loadingState').innerHTML = 
+                    '<p style="color: #ef4444;">Ошибка при загрузке профилей. Убедитесь, что backend запущен.</p>';
+            }
+        }
+
+        // Загрузка при открытии страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProfiles();
+        });
+    </script>
+</body>
+</html>
 
